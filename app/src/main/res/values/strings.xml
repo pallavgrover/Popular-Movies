@@ -3,4 +3,6 @@
     <string name="release_Date">Release Date </string>
     <string name="rating">Rating </string>
     <string name="plot_and_synopsis">Plot and Synopsis</string>
+    <string name="no_internet">No Internet connection</string>
+    <string name="loading">Loading</string>
 </resources>

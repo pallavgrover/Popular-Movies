@@ -18,6 +18,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import pallavgrover.popularmovies.Util.Constants;
+import pallavgrover.popularmovies.Util.SharedContext;
+import pallavgrover.popularmovies.Util.SnackBarManager;
+import pallavgrover.popularmovies.Util.Util;
 import pallavgrover.popularmovies.model.Movie;
 import pallavgrover.popularmovies.model.MoviesResponse;
 import pallavgrover.popularmovies.retrofit.ApiClient;
@@ -56,12 +59,6 @@ public class MoviesActivity extends AppCompatActivity{
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         gridLayoutManager = new GridLayoutManager(this,3);
-        recyclerView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount) {
-                fetchMoreMovies(adapter);
-            }
-        });
         recyclerView.setLayoutManager(gridLayoutManager);
         getMostPopular();
     }
@@ -72,6 +69,30 @@ public class MoviesActivity extends AppCompatActivity{
         inflater.inflate(R.menu.movie_list_activity, menu);
         return true;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        recyclerView.addOnScrollListener(new EndlessScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                if(!Util.hasInternetAccess(MoviesActivity.this)){
+                    SnackBarManager.getSnackBarManagerInstance().showSnackBar(MoviesActivity.this,getString(R.string.no_internet));
+                }else {
+                    fetchMoreMovies(adapter);
+                }
+
+            }
+        });
+        SharedContext.setContext(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedContext.setContext(null);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -90,6 +111,11 @@ public class MoviesActivity extends AppCompatActivity{
     }
 
     public void getTopRated(){
+        if(!Util.hasInternetAccess(MoviesActivity.this)){
+            SnackBarManager.getSnackBarManagerInstance().showSnackBar(MoviesActivity.this,getString(R.string.no_internet));
+            return;
+        }
+        Util.showProgressDialog(MoviesActivity.this,getString(R.string.loading));
         pageNumber =1;
         currentMovieSet = TOP_RATED_SET;
         ApiInterface apiService =
@@ -99,6 +125,7 @@ public class MoviesActivity extends AppCompatActivity{
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                Util.hideProgressDialog();
                 int statusCode = response.code();
                 result = response.body().getResults();
                 adapter = new MoviesAdapter(response.body().getResults(), R.layout.list_item, MoviesActivity.this);
@@ -107,6 +134,7 @@ public class MoviesActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Util.hideProgressDialog();
                 // Log error here since request failed
                 Log.e("", t.toString());
             }
@@ -114,6 +142,11 @@ public class MoviesActivity extends AppCompatActivity{
     }
 
     public void getMostPopular(){
+        if(!Util.hasInternetAccess(MoviesActivity.this)){
+            SnackBarManager.getSnackBarManagerInstance().showSnackBar(MoviesActivity.this,getString(R.string.no_internet));
+            return;
+        }
+        Util.showProgressDialog(MoviesActivity.this,getString(R.string.loading));
         pageNumber = 1;
         currentMovieSet = POPULAR_SET;
         ApiInterface apiService =
@@ -123,6 +156,7 @@ public class MoviesActivity extends AppCompatActivity{
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                Util.hideProgressDialog();
                 int statusCode = response.code();
                 result = response.body().getResults();
                 adapter = new MoviesAdapter(response.body().getResults(), R.layout.list_item, MoviesActivity.this);
@@ -132,12 +166,14 @@ public class MoviesActivity extends AppCompatActivity{
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 // Log error here since request failed
+                Util.hideProgressDialog();
                 Log.e("", t.toString());
             }
         });
     }
 
     private void fetchMoreMovies(final MoviesAdapter moviesAdapter) {
+        Util.showProgressDialog(MoviesActivity.this,getString(R.string.loading));
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
@@ -166,6 +202,7 @@ public class MoviesActivity extends AppCompatActivity{
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                Util.hideProgressDialog();
                 MoviesResponse obj = response.body();
                 List<Movie> moreMovieList;
                 moreMovieList = obj.getResults();
@@ -176,6 +213,7 @@ public class MoviesActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Util.hideProgressDialog();
             }
         });
     }

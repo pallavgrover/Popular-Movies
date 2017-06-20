@@ -16,6 +16,7 @@ import java.util.List;
 
 import okhttp3.internal.Util;
 import pallavgrover.popularmovies.Util.Constants;
+import pallavgrover.popularmovies.Util.SnackBarManager;
 import pallavgrover.popularmovies.model.Movie;
 
 
@@ -59,9 +60,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         Glide.with(context).load(Constants.posterUrl + movies.get(position).getPosterPath()).into(holder.image);
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                Intent i = new Intent(context,MovieDetailsActivity.class);
-                i.putExtra("movie_id",movies.get(position).getId());
-                context.startActivity(i);
+                if(pallavgrover.popularmovies.Util.Util.hasInternetAccess(context)) {
+                    Intent i = new Intent(context, MovieDetailsActivity.class);
+                    i.putExtra("movie_id", movies.get(position).getId());
+                    context.startActivity(i);
+                }else{
+                    SnackBarManager.getSnackBarManagerInstance().showSnackBar(context,context.getString(R.string.no_internet));
+                }
             }
         });
     }

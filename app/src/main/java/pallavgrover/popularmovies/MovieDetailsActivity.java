@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import pallavgrover.popularmovies.Util.SnackBarManager;
+import pallavgrover.popularmovies.Util.Util;
 import pallavgrover.popularmovies.model.Movie;
 import pallavgrover.popularmovies.model.MoviesResponse;
 import pallavgrover.popularmovies.retrofit.ApiClient;
@@ -53,28 +55,36 @@ public class MovieDetailsActivity extends AppCompatActivity {
         releaseDate = (TextView) findViewById(R.id.movie_release_date);
         plot = (TextView) findViewById(R.id.movie_overview);
         if(value !=0){
-            ApiInterface apiService =
-                    ApiClient.getClient().create(ApiInterface.class);
+            if(Util.hasInternetAccess(MovieDetailsActivity.this)) {
+                Util.showProgressDialog(MovieDetailsActivity.this,getString(R.string.loading));
+                ApiInterface apiService =
+                        ApiClient.getClient().create(ApiInterface.class);
 
-            Call<Movie> call = apiService.getMovieDetails(value,API_KEY);
-            call.enqueue(new Callback<Movie>() {
-                @Override
-                public void onResponse(Call<Movie> call, Response<Movie> response) {
-                    int statusCode = response.code();
-                    Glide.with(MovieDetailsActivity.this).load(posterUrl+response.body().getPosterPath()).into(poster);
-                    Glide.with(MovieDetailsActivity.this).load(posterUrlBig+response.body().getPosterPath()).into(backDrop);
-                    title.setText(response.body().getTitle());
-                    releaseDate.setText(String.format("%s %s", getString(R.string.release_Date), response.body().getReleaseDate()));
-                    rating.setText(String.valueOf(String.format("%s %s", getString(R.string.rating), response.body().getVoteAverage())));
-                    plot.setText(response.body().getOverview());
-                }
+                Call<Movie> call = apiService.getMovieDetails(value, API_KEY);
+                call.enqueue(new Callback<Movie>() {
+                    @Override
+                    public void onResponse(Call<Movie> call, Response<Movie> response) {
+                        Util.hideProgressDialog();
+                        int statusCode = response.code();
+                        Glide.with(MovieDetailsActivity.this).load(posterUrl + response.body().getPosterPath()).into(poster);
+                        Glide.with(MovieDetailsActivity.this).load(posterUrlBig + response.body().getPosterPath()).into(backDrop);
+                        title.setText(response.body().getTitle());
+                        releaseDate.setText(String.format("%s %s", getString(R.string.release_Date), response.body().getReleaseDate()));
+                        rating.setText(String.valueOf(String.format("%s %s", getString(R.string.rating), response.body().getVoteAverage())));
+                        plot.setText(response.body().getOverview());
+                    }
 
-                @Override
-                public void onFailure(Call<Movie> call, Throwable t) {
-                    // Log error here since request failed
-                    Log.e("", t.toString());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<Movie> call, Throwable t) {
+                        // Log error here since request failed
+                        Log.e("", t.toString());
+                        Util.hideProgressDialog();
+                    }
+                });
+            }else{
+                SnackBarManager.getSnackBarManagerInstance().showSnackBar(MovieDetailsActivity.this,getString(R.string.no_internet));
+                return;
+            }
         }
     }
     @Override
