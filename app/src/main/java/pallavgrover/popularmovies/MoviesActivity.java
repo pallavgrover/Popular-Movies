@@ -1,11 +1,9 @@
 package pallavgrover.popularmovies;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -13,11 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import pallavgrover.popularmovies.Util.Constants;
 import pallavgrover.popularmovies.model.Movie;
 import pallavgrover.popularmovies.model.MoviesResponse;
 import pallavgrover.popularmovies.retrofit.ApiClient;
@@ -42,7 +37,7 @@ public class MoviesActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
     private  int pageNumber;
-    private int currentMovieSet;
+    private int currentMovie;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,7 +86,7 @@ public class MoviesActivity extends AppCompatActivity{
 
     public void getTopRated(){
         pageNumber =1;
-        currentMovieSet = TOP_RATED_SET;
+        currentMovie = TOP_RATED_SET;
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
@@ -115,7 +110,7 @@ public class MoviesActivity extends AppCompatActivity{
 
     public void getMostPopular(){
         pageNumber = 1;
-        currentMovieSet = POPULAR_SET;
+        currentMovie = POPULAR_SET;
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
@@ -142,7 +137,7 @@ public class MoviesActivity extends AppCompatActivity{
                 ApiClient.getClient().create(ApiInterface.class);
 
         Call<MoviesResponse> call;
-        switch (currentMovieSet) {
+        switch (currentMovie) {
             case POPULAR_SET:
                 call = apiService.getMorePopular(API_KEY,++pageNumber);
                 break;
