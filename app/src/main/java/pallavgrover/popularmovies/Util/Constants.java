@@ -5,7 +5,7 @@ package pallavgrover.popularmovies.Util;
  */
 
 public class Constants {
-    public final static String API_KEY = "b7afe0799844bb9beeb1ed00ef959315";
+    public final static String API_KEY = "";
     public final static String posterUrl ="https://image.tmdb.org/t/p/w185";
     public final static String posterUrlBig ="https://image.tmdb.org/t/p/w342";
     public static final int POPULAR_SET = 100;
