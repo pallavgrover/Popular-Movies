@@ -1,5 +1,6 @@
 package pallavgrover.popularmovies;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +10,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import pallavgrover.popularmovies.Util.Constants;
+import pallavgrover.popularmovies.database.FavoritesContract;
 import pallavgrover.popularmovies.model.Movie;
 import pallavgrover.popularmovies.model.MoviesResponse;
 import pallavgrover.popularmovies.retrofit.ApiClient;
@@ -22,6 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static pallavgrover.popularmovies.Util.Constants.API_KEY;
+import static pallavgrover.popularmovies.Util.Constants.OFFLINE_SET;
 import static pallavgrover.popularmovies.Util.Constants.POPULAR_SET;
 import static pallavgrover.popularmovies.Util.Constants.TOP_RATED_SET;
 
@@ -38,6 +45,9 @@ public class MoviesActivity extends AppCompatActivity{
     private GridLayoutManager gridLayoutManager;
     private  int pageNumber;
     private int currentMovie;
+    private List<Movie> mMovieList;
+    private TextView imageView;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +86,10 @@ public class MoviesActivity extends AppCompatActivity{
                 break;
             case R.id.most_popular:
                 getMostPopular();
+                item.setChecked(true);
+                break;
+            case R.id.favorites:
+                getOfflineData();
                 item.setChecked(true);
                 break;
             default:
@@ -174,6 +188,45 @@ public class MoviesActivity extends AppCompatActivity{
             }
         });
     }
+    private void getOfflineData() {
+        currentMovie = OFFLINE_SET;
+        Cursor cursor = getContentResolver().query(FavoritesContract.Favorites.CONTENT_URI,
+                new String[]{FavoritesContract.Favorites.COLUMN_API_ID,
+                        FavoritesContract.Favorites.COLUMN_TITLE,
+                        FavoritesContract.Favorites.COLUMN_RATING,
+                        FavoritesContract.Favorites.COLUMN_SYNOPSIS,
+                        FavoritesContract.Favorites.COLUMN_RELEASE_DATE},
+                null,
+                null,
+                null);
 
+        /*use the results from the cursor to make a movie list and update ui */
+        // TODO: ultimately will switch to Realm and this won't be a thing
+        mMovieList = new ArrayList<>();
+        if (cursor != null && cursor.getCount() != 0) {
+            while (cursor.moveToNext()) {
+                int idColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_API_ID);
+                int titleColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_TITLE);
+                int voteColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_RATING);
+                int overviewColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_SYNOPSIS);
+                int releaseDateColumnIndex = cursor.getColumnIndex(FavoritesContract.Favorites.COLUMN_RELEASE_DATE);
+
+                int id = cursor.getInt(idColumnIndex);
+                String title = cursor.getString(titleColumnIndex);
+                String vote_average_string = cursor.getString(voteColumnIndex);
+                String overview = cursor.getString(overviewColumnIndex);
+                String release_date = cursor.getString(releaseDateColumnIndex);
+
+                double vote_average = Double.valueOf(vote_average_string);
+                /*the poster will be set by the adapter, so pass null*/
+                mMovieList.add(new Movie(title, release_date, vote_average, overview,id));
+            }
+            cursor.close();
+            adapter = new MoviesAdapter(mMovieList, R.layout.list_item, MoviesActivity.this,true);
+            recyclerView.setAdapter(adapter);
+        } else {
+            // TODO: in event that user has no favorites, maybe prompt them
+        }
+    }
 
 }

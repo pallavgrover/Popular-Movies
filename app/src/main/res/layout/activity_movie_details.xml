@@ -88,19 +88,25 @@
                             android:layout_marginBottom="@dimen/detail_title_bottom_margin"
                             android:layout_marginLeft="@dimen/detail_title_left_padding"
                             android:textIsSelectable="true"
+                            android:drawablePadding="10dp"
                             android:textStyle="bold" />
 
                         <Button
                             android:id="@+id/button_watch_trailer"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/button_vertical_margin"
+                            android:layout_marginBottom="8dp"
                             android:enabled="true"
                             android:visibility="visible"
-                            android:text="Watch Trailer"
+                            android:text="@string/watch_trailer"
                             />
-
+                        <ImageView
+                            android:id="@+id/favorite"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_favorite_black_24dp"/>
                     </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -133,6 +139,7 @@
                     style="?android:attr/textAppearanceMedium"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:textColor="@android:color/black"
                     android:paddingLeft="@dimen/detail_horizontal_margin"
                     android:paddingRight="@dimen/detail_horizontal_margin"
                     android:text="@string/plot_and_synopsis"
@@ -148,12 +155,34 @@
                     android:paddingRight="@dimen/detail_horizontal_margin"
                     android:textIsSelectable="true" />
 
+                <TextView
+                    android:id="@+id/trailer"
+                    style="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/detail_horizontal_margin"
+                    android:paddingRight="@dimen/detail_horizontal_margin"
+                    android:text="@string/trailers"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@android:color/black"
+                    android:textIsSelectable="true" />
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/trailer_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     />
-
+                <TextView
+                    android:id="@+id/review"
+                    style="?android:attr/textAppearanceMedium"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="@dimen/detail_horizontal_margin"
+                    android:paddingRight="@dimen/detail_horizontal_margin"
+                    android:text="@string/reviews"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@android:color/black"
+                    android:textIsSelectable="true" />
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/review_list"
                     android:layout_width="match_parent"

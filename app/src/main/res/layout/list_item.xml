@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textStyle="bold"
+        android:drawableRight="@drawable/ic_favorite_black_24dp"
         android:textSize="16sp" />
+
 
 </LinearLayout>

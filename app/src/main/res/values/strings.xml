@@ -3,4 +3,7 @@
     <string name="release_Date">Release Date </string>
     <string name="rating">Rating </string>
     <string name="plot_and_synopsis">Plot and Synopsis</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="watch_trailer">Watch Trailer</string>
 </resources>

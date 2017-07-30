@@ -21,6 +21,10 @@
         <activity android:name=".MovieDetailsActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.Design.Light.NoActionBar"></activity>
+
+        <provider
+            android:name=".database.MovieProvider"
+            android:authorities="com.pallavgrover.popularmovies"/>
     </application>
 
 </manifest>
