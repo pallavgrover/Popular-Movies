@@ -1,5 +1,8 @@
 package pallavgrover.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 public class VideosBean {
@@ -14,7 +17,7 @@ public class VideosBean {
             this.results = results;
         }
 
-        public class Trailer {
+        public class Trailer implements Parcelable{
             private String id;
             private String iso_639_1;
             private String iso_3166_1;
@@ -23,6 +26,46 @@ public class VideosBean {
             private String site;
             private int size;
             private String type;
+
+            protected Trailer(Parcel in) {
+                id = in.readString();
+                iso_639_1 = in.readString();
+                iso_3166_1 = in.readString();
+                key = in.readString();
+                name = in.readString();
+                site = in.readString();
+                size = in.readInt();
+                type = in.readString();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(id);
+                dest.writeString(iso_639_1);
+                dest.writeString(iso_3166_1);
+                dest.writeString(key);
+                dest.writeString(name);
+                dest.writeString(site);
+                dest.writeInt(size);
+                dest.writeString(type);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public final Creator<Trailer> CREATOR = new Creator<Trailer>() {
+                @Override
+                public Trailer createFromParcel(Parcel in) {
+                    return new Trailer(in);
+                }
+
+                @Override
+                public Trailer[] newArray(int size) {
+                    return new Trailer[size];
+                }
+            };
 
             public String getId() {
                 return id;

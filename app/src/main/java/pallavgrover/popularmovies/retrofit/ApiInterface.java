@@ -27,8 +27,8 @@ public interface ApiInterface {
     Call<VideosBean> getMovieVideos(@Path("id") int id, @Query("api_key") String apiKey);
 
     @GET("movie/popular")
-    Call<MoviesResponse> getMorePopular(@Query("api_key") String apiKey,@Query("page") int pagenumber);
+    Call<MoviesResponse> getMorePopular(@Query("api_key") String apiKey, @Query("page") int pagenumber);
 
     @GET("movie/top_rated" )
-    Call<MoviesResponse> getMoreTopRated(@Query("api_key") String apiKey,@Query("page") int pagenumber);
+    Call<MoviesResponse> getMoreTopRated(@Query("api_key") String apiKey, @Query("page") int pagenumber);
 }

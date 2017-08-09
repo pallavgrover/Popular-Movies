@@ -30,12 +30,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     }
 
     @Override
-    public TrailerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View trailerImageView = inflater.inflate(R.layout.item_trailer, parent, false);
-        TrailerAdapter.ViewHolder viewHolder = new ViewHolder(trailerImageView);
+        ViewHolder viewHolder = new ViewHolder(trailerImageView);
         return viewHolder;
     }
 

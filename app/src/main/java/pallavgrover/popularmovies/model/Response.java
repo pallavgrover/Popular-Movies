@@ -1,5 +1,8 @@
 package pallavgrover.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 public class Response {
@@ -41,11 +44,43 @@ public class Response {
             this.results = results;
         }
 
-        public class Reviews {
+        public class Reviews implements Parcelable{
             private String id;
             private String author;
             private String content;
             private String url;
+
+            protected Reviews(Parcel in) {
+                id = in.readString();
+                author = in.readString();
+                content = in.readString();
+                url = in.readString();
+            }
+
+            @Override
+            public void writeToParcel(Parcel dest, int flags) {
+                dest.writeString(id);
+                dest.writeString(author);
+                dest.writeString(content);
+                dest.writeString(url);
+            }
+
+            @Override
+            public int describeContents() {
+                return 0;
+            }
+
+            public final Creator<Reviews> CREATOR = new Creator<Reviews>() {
+                @Override
+                public Reviews createFromParcel(Parcel in) {
+                    return new Reviews(in);
+                }
+
+                @Override
+                public Reviews[] newArray(int size) {
+                    return new Reviews[size];
+                }
+            };
 
             public String getId() {
                 return id;

@@ -201,7 +201,7 @@ public class Movie implements Parcelable{
         dest.writeInt(id);
     }
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
         public Movie createFromParcel(Parcel in) {
             return new Movie(in);

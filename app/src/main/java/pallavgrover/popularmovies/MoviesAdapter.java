@@ -6,8 +6,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +23,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.List;
 
-import okhttp3.internal.Util;
 import pallavgrover.popularmovies.Util.Constants;
 import pallavgrover.popularmovies.database.FavoritesContract;
 import pallavgrover.popularmovies.model.Movie;
@@ -66,11 +63,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     @Override
-    public MoviesAdapter.MovieViewHolder onCreateViewHolder(ViewGroup parent,
+    public MovieViewHolder onCreateViewHolder(ViewGroup parent,
                                                             int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
         return new MovieViewHolder(view);
     }
+
+
 
 
     @Override
@@ -96,7 +95,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 Intent i = new Intent(context,MovieDetailsActivity.class);
-                i.putExtra("movie_id",movies.get(position));
+                i.putExtra(MovieDetailsFragment.ARG_MOVIE_DETAILS,movies.get(position));
                 context.startActivity(i);
             }
         });

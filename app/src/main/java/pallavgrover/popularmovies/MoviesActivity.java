@@ -2,6 +2,7 @@ package pallavgrover.popularmovies;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,14 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pallavgrover.popularmovies.Util.Constants;
 import pallavgrover.popularmovies.database.FavoritesContract;
 import pallavgrover.popularmovies.model.Movie;
 import pallavgrover.popularmovies.model.MoviesResponse;
@@ -43,10 +42,16 @@ public class MoviesActivity extends AppCompatActivity{
     private MoviesAdapter adapter;
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayoutManager;
+    public static final String BUNDLE_KEY_FAVORITES = "faves";
+    public static final String BUNDLE_KEY_MOVIE_LIST = "movie list key";
     private  int pageNumber;
     private int currentMovie;
     private List<Movie> mMovieList;
     private TextView imageView;
+    private Parcelable listState;
+    private int lastFirstVisiblePosition;
+    private boolean mUsingOfflineData;
+
 
 
     @Override
@@ -68,7 +73,45 @@ public class MoviesActivity extends AppCompatActivity{
             }
         });
         recyclerView.setLayoutManager(gridLayoutManager);
-        getMostPopular();
+        result = (List<Movie>) (savedInstanceState != null
+                        ? savedInstanceState.getParcelableArrayList("movie list key")
+                        : new ArrayList<>());
+
+        currentMovie = (savedInstanceState != null
+                ? savedInstanceState.getInt("key")
+                : 0);
+        pageNumber = (savedInstanceState != null
+                ? savedInstanceState.getInt("page")
+                : 0);
+        if(currentMovie != OFFLINE_SET) {
+            if (result.size() > 0) {
+                adapter = new MoviesAdapter(result, R.layout.list_item, MoviesActivity.this);
+                recyclerView.setAdapter(adapter);
+            } else {
+//            if(currentMovie == TOP_RATED_SET) {
+//                getTopRated();
+//            }else if(currentMovie == OFFLINE_SET){
+//                getOfflineData();
+//            }else{
+                getMostPopular();
+
+            }
+        }else{
+            getOfflineData();
+            result = null;
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(currentMovie == TOP_RATED_SET) {
+            MenuItem item = menu.findItem(R.id.top_rated);
+            item.setChecked(true);
+        }else if(currentMovie == OFFLINE_SET){
+            MenuItem item = menu.findItem(R.id.favorites);
+            item.setChecked(true);
+        }
+        return true;
     }
 
     @Override
@@ -101,6 +144,7 @@ public class MoviesActivity extends AppCompatActivity{
     public void getTopRated(){
         pageNumber =1;
         currentMovie = TOP_RATED_SET;
+        mUsingOfflineData = false;
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
@@ -125,6 +169,7 @@ public class MoviesActivity extends AppCompatActivity{
     public void getMostPopular(){
         pageNumber = 1;
         currentMovie = POPULAR_SET;
+        mUsingOfflineData = false;
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
@@ -190,6 +235,8 @@ public class MoviesActivity extends AppCompatActivity{
     }
     private void getOfflineData() {
         currentMovie = OFFLINE_SET;
+        mUsingOfflineData = true;
+
         Cursor cursor = getContentResolver().query(FavoritesContract.Favorites.CONTENT_URI,
                 new String[]{FavoritesContract.Favorites.COLUMN_API_ID,
                         FavoritesContract.Favorites.COLUMN_TITLE,
@@ -229,4 +276,28 @@ public class MoviesActivity extends AppCompatActivity{
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movie list key", (ArrayList<? extends Parcelable>) result);
+        outState.putBoolean(BUNDLE_KEY_FAVORITES, mUsingOfflineData);
+        outState.putInt("key",currentMovie);
+        outState.putInt("page",pageNumber);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }

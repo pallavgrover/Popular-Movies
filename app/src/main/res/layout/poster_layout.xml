@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/poster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/detail_horizontal_margin"
+        android:paddingRight="@dimen/detail_horizontal_margin">
+
+        <ImageView
+            android:id="@+id/movie_poster"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="@dimen/movie_poster_vertical_padding"
+            android:layout_marginRight="@dimen/movie_poster_padding_right"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:id="@+id/watch_trailer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/movie_title"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/detail_title_bottom_margin"
+                android:layout_marginLeft="@dimen/detail_title_left_padding"
+                android:drawablePadding="10dp"
+                android:textIsSelectable="true"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_watch_trailer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:enabled="true"
+                android:text="@string/watch_trailer"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_favorite_black_24dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/user_rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/detail_horizontal_margin"
+        android:paddingRight="@dimen/detail_horizontal_margin">
+
+        <TextView
+            android:id="@+id/movie_user_rating"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textIsSelectable="true" />
+
+        <TextView
+            android:id="@+id/movie_release_date"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textIsSelectable="true" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/heading"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/detail_horizontal_margin"
+        android:paddingRight="@dimen/detail_horizontal_margin"
+        android:text="@string/plot_and_synopsis"
+        android:textColor="@android:color/black"
+        android:textIsSelectable="true" />
+
+    <TextView
+        android:id="@+id/movie_overview"
+        style="?android:attr/textAppearanceMedium"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="@dimen/detail_horizontal_margin"
+        android:paddingRight="@dimen/detail_horizontal_margin"
+        android:textIsSelectable="true" />
+
+</LinearLayout>
