@@ -22,12 +22,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 import pallavgrover.popularmovies.Util.Constants;
+import pallavgrover.popularmovies.Util.Util;
 import pallavgrover.popularmovies.database.FavoritesContract;
 import pallavgrover.popularmovies.model.Movie;
-
-/**
- * Created by harsh on 09/08/2017.
- */
 
 public class PosterAdapterViewHolder extends RecyclerView.ViewHolder {
 
@@ -84,48 +81,13 @@ public class PosterAdapterViewHolder extends RecyclerView.ViewHolder {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
-                    addMovie(byteArray,movie);
+                    Util.addMovie(byteArray,movie,context);
 
                 } else {
-                    removeMovie(movie);
+                    Util.removeMovie(context,movie);
                 }
             }
         });
     }
 
-    private void removeMovie(Movie movie) {
-        String currentMovieId = String.valueOf(movie.getId());
-        String whereClause = FavoritesContract.Favorites.COLUMN_API_ID + " = ?";
-        String[] whereArgs = new String[]{currentMovieId};
-        int rowsDeleted = context.getContentResolver().delete(FavoritesContract.Favorites.CONTENT_URI, whereClause, whereArgs);
-
-        File photofile = new File(
-                context.getFilesDir(), currentMovieId);
-        if (photofile.exists()) {
-            photofile.delete();
-        }
-    }
-
-    private void addMovie(byte[] byteArray,Movie movie) {
-        /* Add Movie to ContentProvider */
-        ContentValues values = new ContentValues();
-        values.put(FavoritesContract.Favorites.COLUMN_TITLE, movie.getTitle());
-        values.put(FavoritesContract.Favorites.COLUMN_SYNOPSIS, movie.getOverview());
-        values.put(FavoritesContract.Favorites.COLUMN_RATING, movie.getVoteAverage());
-        values.put(FavoritesContract.Favorites.COLUMN_RELEASE_DATE, movie.getReleaseDate());
-        values.put(FavoritesContract.Favorites.COLUMN_API_ID, movie.getId());
-        Uri insertedMovieUri = context.getContentResolver().
-                insert(FavoritesContract.Favorites.CONTENT_URI, values);
-
-        /* Write the file to disk */
-        String filename = String.valueOf(movie.getId());
-        FileOutputStream outputStream;
-        try {
-            outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(byteArray);
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

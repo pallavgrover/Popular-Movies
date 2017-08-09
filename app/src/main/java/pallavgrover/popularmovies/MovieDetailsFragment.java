@@ -85,22 +85,8 @@ public class MovieDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.activity_movie_details, container, false);
         setFavoriteStatus();
-//        poster = (ImageView) rootView.findViewById(R.id.movie_poster);
-//        backDrop = (ImageView) findViewById(R.id.movie_backdrop);
-//        title = (TextView) rootView.findViewById(R.id.movie_title);
-//        rating = (TextView) rootView.findViewById(R.id.movie_user_rating);
-//        releaseDate = (TextView) rootView.findViewById(R.id.movie_release_date);
-//        plot = (TextView) rootView.findViewById(R.id.movie_overview);
         recyclerViewMovieDetail = (RecyclerView) rootView.findViewById(R.id.movie_detail_list);
         linearLayoutManager = new LinearLayoutManager(getActivity());
-//        recyclerViewReview.setLayoutManager(linearLayoutManager);
-//        recyclerViewTrailer = (RecyclerView) rootView.findViewById(R.id.trailer_list);
-//        mScrollView = (NestedScrollView) rootView.findViewById(R.id.scroll_view);
-//        gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-//        title.setText(movie.getTitle());
-//        releaseDate.setText(String.format("%s %s", getString(R.string.release_Date), movie.getReleaseDate()));
-//        rating.setText(String.valueOf(String.format("%s %s", getString(R.string.rating), movie.getVoteAverage())));
-//        plot.setText(movie.getOverview());
         reviewsList = (List<Response.Reviews>) (savedInstanceState != null
                 ? savedInstanceState.getParcelableArrayList("review")
                 : new ArrayList<>());
@@ -124,8 +110,6 @@ public class MovieDetailsFragment extends Fragment {
                 public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
                     reviewsList = response.body().getResults();
                     adapter.updateReviews(reviewsList);
-//                    ReviewsAdapter adapter = new ReviewsAdapter(getActivity(), reviewsList);
-//                    recyclerViewReview.setAdapter(adapter);
                 }
 
                 @Override
@@ -146,9 +130,6 @@ public class MovieDetailsFragment extends Fragment {
                 public void onResponse(Call<VideosBean> call, retrofit2.Response<VideosBean> response) {
                     trailerList = response.body().getResults();
                     adapter.updateTrailers(trailerList);
-
-//                    TrailerAdapter adapter = new TrailerAdapter(getActivity(), trailerList);
-//                    recyclerViewTrailer.setAdapter(adapter);
                 }
 
                 @Override
@@ -158,45 +139,6 @@ public class MovieDetailsFragment extends Fragment {
                 }
             });
         }
-//        if (isFavorite) {
-//            try {
-//                String filename = String.valueOf(movie.getId());
-//                File photofile = new File(getActivity().getFilesDir(), filename);
-//                Bitmap freshBitMap = BitmapFactory.decodeStream(new FileInputStream(photofile));
-//                poster.setImageBitmap(freshBitMap);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            Glide.with(getActivity()).load(posterUrl+movie.getPosterPath()).into(poster);
-//        }
-//        Glide.with(MovieDetailsActivity.this).load(posterUrlBig+movie.getPosterPath()).into(backDrop);
-//        final ImageView favoriteButton = (ImageView) rootView.findViewById(R.id.favorite);
-//        final Drawable favoriteIcon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_orange_24dp);
-//        final Drawable nonFavoriteIcon = ContextCompat.getDrawable(getActivity(), R.drawable.ic_favorite_black_24dp);
-//        //check if the current movie is a favorite
-//        favoriteButton.setImageDrawable(isFavorite ? favoriteIcon : nonFavoriteIcon);
-//
-//        favoriteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //toggle favorite boolean
-//                isFavorite = !isFavorite;
-//                //toggle the drawable
-//                favoriteButton.setImageDrawable(isFavorite ? favoriteIcon : nonFavoriteIcon);
-//                //toggle db
-//                if (isFavorite) {
-//                    Bitmap bitmap = ((BitmapDrawable) poster.getDrawable()).getBitmap();
-//                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-//                    byte[] byteArray = stream.toByteArray();
-//                    addMovie(byteArray);
-//
-//                } else {
-//                    removeMovie();
-//                }
-//            }
-//        });
         return rootView;
     }
 

@@ -88,11 +88,6 @@ public class MoviesActivity extends AppCompatActivity{
                 adapter = new MoviesAdapter(result, R.layout.list_item, MoviesActivity.this);
                 recyclerView.setAdapter(adapter);
             } else {
-//            if(currentMovie == TOP_RATED_SET) {
-//                getTopRated();
-//            }else if(currentMovie == OFFLINE_SET){
-//                getOfflineData();
-//            }else{
                 getMostPopular();
 
             }
